@@ -13,6 +13,7 @@ router.get('/', (req, res) => {
 
     }
   })
+  .then(results => res.json(results))
 });
 
 // get one product

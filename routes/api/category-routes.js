@@ -1,5 +1,4 @@
 const router = require('express').Router();
-const { beforeFindAfterExpandIncludeAll } = require('../../config/connection');
 const { Category, Product } = require('../../models');
 
 // The `/api/categories` endpoint
@@ -16,6 +15,9 @@ router.get('/', (req, res) => {
     ]
   })
   .then(results => res.json(results))
+  .catch(err => {
+      res.json(err)
+  })
 });
 
 router.get('/:id', (req, res) => {
@@ -25,11 +27,9 @@ router.get('/:id', (req, res) => {
     where: {
       id: req.params.id
     },
-    include: {
-      model: Product,
-      where: 'category_id'
-    }
+    include: [Product]
   })
+  .then(results => res.json(results))
 });
 
 router.post('/', (req, res) => {
@@ -49,7 +49,7 @@ router.put('/:id', (req, res) => {
   // update a category by its `id` value
   Category.update(req.body, {
     where: {
-      id: params.req.id
+      id: req.params.id
     }
   })
   .then(results => res.json(results))
@@ -71,6 +71,10 @@ router.delete('/:id', (req, res) => {
     if(!results) {
       res.status(404).json({ message: 'Product not found' })
     }
+    res.json(results)
+  })
+  .catch(err => {
+    res.json(err)
   })
 });
 
